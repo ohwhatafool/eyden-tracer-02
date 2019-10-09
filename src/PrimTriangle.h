@@ -74,6 +74,7 @@ public:
 		//normalize
 		normalize(normalT);
 		return normalT;
+		
 	}
 
 private:

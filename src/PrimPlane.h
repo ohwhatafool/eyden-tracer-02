@@ -39,7 +39,7 @@ public:
 	virtual Vec3f GetNormal(const Ray &ray) const override
 	{
 		// --- PUT YOUR CODE HERE ---
-
+		//normalize the normal to plane
 		return normalize(m_normal);
 	}
 
