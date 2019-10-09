@@ -16,7 +16,9 @@ public:
 	/**
 	* @brief Constructor
 	*/
-	CPrim(std::shared_ptr<IShader> pShader) : m_pShader(pShader) {}
+	CPrim(std::shared_ptr<IShader> pShader) : m_pShader(pShader) {
+		
+	}
 	CPrim(const CPrim&) = delete;
 	virtual ~CPrim(void) = default;
 	const CPrim& operator=(const CPrim&) = delete;

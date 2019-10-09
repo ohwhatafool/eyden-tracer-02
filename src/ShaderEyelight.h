@@ -16,13 +16,19 @@ public:
 	 */
 	CShaderEyelight(Vec3f color = RGB(0.5f, 0.5f, 0.5f))
 		: CShaderFlat(color)
-	{}
+	{
+	}
 	virtual ~CShaderEyelight(void) = default;
 
-	virtual Vec3f Shade(const Ray& ray) const override
+	virtual Vec3f Shade(const Ray &ray) const override
 	{
 		// --- PUT YOUR CODE HERE ---
-		return RGB(0, 0, 0);
+		/*result = |cos(theta)|·color 
+		N.I = cos(theta) */
+
+		float theta = ray.hit->GetNormal(ray).dot(-ray.dir);
+		return (abs(theta)) * CShaderFlat::Shade(ray);
+
+		//return result;
 	}
 };
-

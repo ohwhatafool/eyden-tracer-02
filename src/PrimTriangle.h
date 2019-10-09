@@ -17,54 +17,67 @@ public:
 	 * @param c Position of the third vertex
 	 */
 	CPrimTriangle(Vec3f a, Vec3f b, Vec3f c, std::shared_ptr<IShader> pShader)
-		: CPrim(pShader)
-		, m_a(a)
-		, m_b(b)
-		, m_c(c)
-  	{}
+		: CPrim(pShader), m_a(a), m_b(b), m_c(c)
+	{
+	}
 	virtual ~CPrimTriangle(void) = default;
-	
-	virtual bool Intersect(Ray& ray) override
+
+	virtual bool Intersect(Ray &ray) override
 	{
 		const Vec3f edge1 = m_b - m_a;
 		const Vec3f edge2 = m_c - m_a;
-		
+
 		const Vec3f pvec = ray.dir.cross(edge2);
-		
+
 		const float det = edge1.dot(pvec);
-		if (fabs(det) < Epsilon) return false;
-		
+		if (fabs(det) < Epsilon)
+			return false;
+
 		const float inv_det = 1.0f / det;
-		
+
 		const Vec3f tvec = ray.org - m_a;
 		float lambda = tvec.dot(pvec);
 		lambda *= inv_det;
-		
-		if (lambda < 0.0f || lambda > 1.0f) return false;
-		
+
+		if (lambda < 0.0f || lambda > 1.0f)
+			return false;
+
 		const Vec3f qvec = tvec.cross(edge1);
 		float mue = ray.dir.dot(qvec);
 		mue *= inv_det;
-		
-		if (mue < 0.0f || mue + lambda > 1.0f) return false;
-		
+
+		if (mue < 0.0f || mue + lambda > 1.0f)
+			return false;
+
 		float f = edge2.dot(qvec);
 		f *= inv_det;
-		if (ray.t <= f || f <  Epsilon  ) return false;
-		
+		if (ray.t <= f || f < Epsilon)
+			return false;
+
 		ray.t = f;
-		
+
+		/* After a ray has been successfully intersected with a primitive, 
+		store the primitive’s address in hit */
+		ray.hit = this;
+
 		return true;
 	}
 
-	virtual Vec3f GetNormal(const Ray& ray) const override
+	virtual Vec3f GetNormal(const Ray &ray) const override
 	{
 		// --- PUT YOUR CODE HERE ---
-		return Vec3f();
+
+		//Formula to calculate normal of triangle reference:
+		// https://courses.cs.washington.edu/courses/csep557/13wi/lectures/triangle_intersection.pdf?fbclid=IwAR11gVkvP9lOM-JTZetKSEsJLU9Jd0pIZb3f5j_STVC3pHRBXFvpOW4KAyo
+		// Normal of triangle
+		Vec3f normalT = (m_b - m_a).cross(m_c - m_a);
+		//normalize
+		normalize(normalT);
+		return normalT;
 	}
-	
+
 private:
-	Vec3f m_a;	///< Position of the first vertex
-	Vec3f m_b;	///< Position of the second vertex
-	Vec3f m_c;	///< Position of the third vertex
+	Vec3f m_a; ///< Position of the first vertex
+	Vec3f m_b; ///< Position of the second vertex
+	Vec3f m_c; ///< Position of the third vertex
 };
