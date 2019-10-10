@@ -65,8 +65,7 @@ public:
 		//normal of sphere
 		Vec3f normalSp = (ray.org + ray.t * ray.dir) - m_center;
 		//normalize the normal
-		normalize(normalSp);
-		return normalSp;
+		return normalize(normalSp);
 	}
 
 private:
