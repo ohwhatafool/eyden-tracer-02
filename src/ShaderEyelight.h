@@ -26,9 +26,10 @@ public:
 		/*result = |cos(theta)|·color 
 		N.I = cos(theta) */
 
-		float theta = ray.hit->GetNormal(ray).dot(-ray.dir);
-		return (abs(theta)) * CShaderFlat::Shade(ray);
-
-		//return result;
+		Vec3f I = normalize(ray.dir);
+		Vec3f N = ray.hit->GetNormal(ray);
+		float cos_theta = (-1) * I.dot(N);
+		Vec3f result = abs(cos_theta) * CShaderFlat::Shade(ray);
+		return result;
 	}
 };
