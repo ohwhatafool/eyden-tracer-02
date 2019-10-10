@@ -28,8 +28,7 @@ public:
 	void Add(const std::shared_ptr<CPrim> pPrim)
 	{
 		// --- PUT YOUR CODE HERE ---
-		//add new primitive to the scene
-		m_vpPrims.push_back(pPrim);
+		m_vpPrims.push_back(pPrim); //pushing back new shared pointers
 	}
 	/**
 	 * @brief Adds a new light to the scene
@@ -38,8 +37,8 @@ public:
 	void Add(const std::shared_ptr<ILight> pLight)
 	{
 		// --- PUT YOUR CODE HERE ---
-
 		m_vpLights.push_back(pLight);
+		//pushing back new shared pointers
 	}
 
 	/**
@@ -53,7 +52,7 @@ public:
 		// --- PUT YOUR CODE HERE ---
 		//Since Intersect is a virtual function
 
-		//Iterating over primitives and checking if it intersects or not
+		//Checking if Ray intersects primitive or not, by looping through all primitives
 		for (auto index = m_vpPrims.begin(); index != m_vpPrims.end(); index++)
 		{
 			if ((*index)->Intersect(ray))
@@ -63,14 +62,14 @@ public:
 		}
 		return false;
 	}
-
 	/**
 	 * find occluder
 	 */
 	bool Occluded(Ray &ray)
 	{
 		// --- PUT YOUR CODE HERE ---
-		return false;
+		return Intersect(ray);
+		// check if something blocks the light.
 	}
 
 	/**
@@ -80,13 +79,18 @@ public:
 	Vec3f RayTrace(Ray &ray) const
 	{
 		// --- PUT YOUR CODE HERE ---
+		Vec3f col = m_bgColor; // background color
 
-		//depending on a hit or not return a white or black color.
-		if (Intersect(ray))
-			return ray.hit->getShader()->Shade(ray);
-		// //whiteVec3f(255, 255, 255);
-		else
-			return m_bgColor;
+		//Return the color depending on the hit
+		for (auto i = m_vpPrims.begin(); i != m_vpPrims.end(); i++)
+		{
+			if ((*i)->Intersect(ray))
+			{
+				col = ray.hit->getShader()->Shade(ray);
+				// color = Vec3f(1,1,1); // trying Initially
+			}
+		}
+		return col;
 	}
 
 public:
