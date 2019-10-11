@@ -72,9 +72,8 @@ public:
 		// Normal of triangle
 		Vec3f normalT = (m_b - m_a).cross(m_c - m_a);
 		//normalize
-		normalize(normalT);
-		return normalT;
-		
+
+		return normalize(normalT);
 	}
 
 private:
